@@ -6,6 +6,7 @@ import {
   isErr,
   isOk,
   ok,
+  type Schema,
   unknownSchema,
   validationError,
 } from "../src/index.js";
@@ -38,5 +39,26 @@ describe("core foundations", () => {
     const parsed = await unknownSchema.parse({ value: 1 });
 
     expect(parsed).toEqual(ok({ value: 1 }));
+  });
+
+  it("returns schema validation failures with issues", async () => {
+    const rejectingSchema: Schema<number> = {
+      parse() {
+        return {
+          ok: false,
+          issues: [{ path: ["amount"], message: "Expected number", code: "invalid_type" }],
+        };
+      },
+    };
+
+    const parsed = await rejectingSchema.parse("not-a-number");
+
+    expect(parsed).toEqual({
+      ok: false,
+      issues: [{ path: ["amount"], message: "Expected number", code: "invalid_type" }],
+    });
+    if (!parsed.ok) {
+      expect(parsed.issues[0]?.path).toEqual(["amount"]);
+    }
   });
 });

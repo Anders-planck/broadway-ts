@@ -1,3 +1,5 @@
+import type { CqrsError } from "./errors.js";
+
 export type Awaitable<T> = T | Promise<T>;
 
 export type Ok<T> = {
@@ -10,7 +12,7 @@ export type Err<E> = {
   readonly error: E;
 };
 
-export type Result<T, E = never> = Ok<T> | Err<E>;
+export type Result<T, E = CqrsError> = Ok<T> | Err<E>;
 
 export const ok = <T>(value: T): Ok<T> => ({ ok: true, value });
 
