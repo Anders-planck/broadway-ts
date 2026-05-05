@@ -118,6 +118,7 @@ Use this content for `tsconfig.base.json`:
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
     "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
     "skipLibCheck": true
   }
 }
@@ -200,6 +201,7 @@ import {
   isErr,
   isOk,
   ok,
+  type Schema,
   unknownSchema,
   validationError,
 } from "../src/index.js";
@@ -232,6 +234,27 @@ describe("core foundations", () => {
     const parsed = await unknownSchema.parse({ value: 1 });
 
     expect(parsed).toEqual(ok({ value: 1 }));
+  });
+
+  it("returns schema validation failures with issues", async () => {
+    const rejectingSchema: Schema<number> = {
+      parse() {
+        return {
+          ok: false,
+          issues: [{ path: ["amount"], message: "Expected number", code: "invalid_type" }],
+        };
+      },
+    };
+
+    const parsed = await rejectingSchema.parse("not-a-number");
+
+    expect(parsed).toEqual({
+      ok: false,
+      issues: [{ path: ["amount"], message: "Expected number", code: "invalid_type" }],
+    });
+    if (!parsed.ok) {
+      expect(parsed.issues[0]?.path).toEqual(["amount"]);
+    }
   });
 });
 ```
@@ -290,6 +313,8 @@ Use this content for `packages/core/tsconfig.json`:
 Use this content for `packages/core/src/result.ts`:
 
 ```ts
+import type { CqrsError } from "./errors.js";
+
 export type Awaitable<T> = T | Promise<T>;
 
 export type Ok<T> = {
@@ -302,7 +327,7 @@ export type Err<E> = {
   readonly error: E;
 };
 
-export type Result<T, E = never> = Ok<T> | Err<E>;
+export type Result<T, E = CqrsError> = Ok<T> | Err<E>;
 
 export const ok = <T>(value: T): Ok<T> => ({ ok: true, value });
 
@@ -425,10 +450,15 @@ export const persistenceError = (
 Use this content for `packages/core/src/schema.ts`:
 
 ```ts
-import { ok, type Awaitable, type Result } from "./result.js";
 import type { ValidationIssue } from "./errors.js";
+import { ok, type Awaitable, type Ok } from "./result.js";
 
-export type ParseResult<T> = Result<T, readonly ValidationIssue[]>;
+export type ParseFailure = {
+  readonly ok: false;
+  readonly issues: readonly ValidationIssue[];
+};
+
+export type ParseResult<T> = Ok<T> | ParseFailure;
 
 export interface Schema<T> {
   parse(input: unknown): Awaitable<ParseResult<T>>;
@@ -492,7 +522,6 @@ import { describe, expect, it } from "vitest";
 import {
   defineCommand,
   defineQuery,
-  err,
   ok,
   parseCommand,
   parseQuery,
@@ -504,7 +533,10 @@ const numberSchema: Schema<number> = {
   parse(input) {
     return typeof input === "number"
       ? ok(input)
-      : err([{ path: [], message: "Expected number", code: "invalid_type" }]);
+      : {
+          ok: false,
+          issues: [{ path: [], message: "Expected number", code: "invalid_type" }],
+        };
   },
 };
 
@@ -688,7 +720,7 @@ const parseMessage = async <
   const parsed = await definition.schema.parse(input);
 
   if (!parsed.ok) {
-    return err(validationError(parsed.error));
+    return err(validationError(parsed.issues));
   }
 
   return ok({
@@ -774,7 +806,6 @@ import {
   QueryBus,
   defineCommand,
   defineQuery,
-  err,
   ok,
   typeToken,
   type DomainError,
@@ -785,7 +816,10 @@ const stringSchema: Schema<string> = {
   parse(input) {
     return typeof input === "string"
       ? ok(input)
-      : err([{ path: [], message: "Expected string", code: "invalid_type" }]);
+      : {
+          ok: false,
+          issues: [{ path: [], message: "Expected string", code: "invalid_type" }],
+        };
   },
 };
 
@@ -1148,8 +1182,8 @@ describe("zodSchema", () => {
 
     expect(result.ok).toBe(false);
     if (!result.ok) {
-      expect(result.error[0]?.path).toEqual(["amount"]);
-      expect(result.error[0]?.code).toBe("too_small");
+      expect(result.issues[0]?.path).toEqual(["amount"]);
+      expect(result.issues[0]?.code).toBe("too_small");
     }
   });
 });
@@ -1217,7 +1251,7 @@ Use this content for `packages/zod/tsconfig.json`:
 Use this content for `packages/zod/src/index.ts`:
 
 ```ts
-import { err, ok, type Schema, type ValidationIssue } from "@broadway-ts/core";
+import { ok, type Schema, type ValidationIssue } from "@broadway-ts/core";
 import type { z, ZodTypeAny } from "zod";
 
 export const zodSchema = <TSchema extends ZodTypeAny>(
@@ -1238,7 +1272,7 @@ export const zodSchema = <TSchema extends ZodTypeAny>(
       code: issue.code,
     }));
 
-    return err(issues);
+    return { ok: false, issues };
   },
 });
 ```
@@ -1322,7 +1356,7 @@ const depositedSchema: Schema<Deposited> = {
       ? ok(value)
       : {
           ok: false,
-          error: [{ path: [], message: "Invalid deposited event" }],
+          issues: [{ path: [], message: "Invalid deposited event" }],
         };
   },
 };
@@ -1534,7 +1568,7 @@ export const parseEventPayload = async <
   const parsed = await definition.schema.parse(input);
 
   if (!parsed.ok) {
-    return err(validationError(parsed.error));
+    return err(validationError(parsed.issues));
   }
 
   return ok(parsed.value as EventPayloadOf<TDefinition>);
