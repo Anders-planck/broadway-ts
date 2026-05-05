@@ -1,0 +1,19 @@
+{
+  "name": "@broadway-ts/core",
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Framework-agnostic CQRS core for Broadway TS.",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts --clean",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  }
+}
