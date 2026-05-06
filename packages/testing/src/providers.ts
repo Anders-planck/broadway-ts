@@ -4,7 +4,7 @@ export class FixedClock implements Clock {
   readonly #date: Date;
 
   constructor(date: Date | string) {
-    this.#date = typeof date === "string" ? new Date(date) : date;
+    this.#date = new Date(date);
   }
 
   now(): Date {

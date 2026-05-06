@@ -14,6 +14,10 @@ export class InMemoryEventStore implements EventStore {
     events: readonly EventData[],
     expectedVersion: ExpectedVersion,
   ): Promise<Result<readonly EventEnvelope[], ConcurrencyError>> {
+    if (events.length === 0) {
+      return ok([]);
+    }
+
     const stream = this.#streams.get(streamId) ?? [];
     const currentVersion = stream.length;
 

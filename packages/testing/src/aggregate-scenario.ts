@@ -14,11 +14,11 @@ export const aggregateScenario = <TAggregate extends EventSourcedAggregate>(
     aggregate.rehydrate(events);
 
     return {
-      when(action: (aggregate: TAggregate) => unknown) {
+      when<TResult>(action: (aggregate: TAggregate) => TResult) {
         const result = action(aggregate);
         return {
           result,
-          pendingEvents: aggregate.pendingEvents as readonly PendingEvent[],
+          pendingEvents: [...aggregate.pendingEvents] as readonly PendingEvent[],
           aggregate,
         };
       },
