@@ -201,6 +201,70 @@ describe("buses", () => {
     expect(result).toEqual(ok(100));
   });
 
+  it("executes nested query middleware in registration order", async () => {
+    const calls: string[] = [];
+    const bus = new QueryBus();
+
+    bus.use(async (_query, _ctx, next) => {
+      calls.push("first-before");
+      const result = await next();
+      calls.push("first-after");
+      return result;
+    });
+
+    bus.use(async (_query, _ctx, next) => {
+      calls.push("second-before");
+      const result = await next();
+      calls.push("second-after");
+      return result;
+    });
+
+    bus.register(GetBalance, async () => {
+      calls.push("handler");
+      return ok(100);
+    });
+
+    const result = await bus.execute(GetBalance, "account-1");
+
+    expect(result).toEqual(ok(100));
+    expect(calls).toEqual([
+      "first-before",
+      "second-before",
+      "handler",
+      "second-after",
+      "first-after",
+    ]);
+  });
+
+  it("allows query middleware to short-circuit handler execution", async () => {
+    const calls: string[] = [];
+    const bus = new QueryBus();
+
+    bus.use(async () => {
+      calls.push("short-circuit");
+      return err(domainError("bank.query-blocked", "Query blocked"));
+    });
+
+    bus.use(async (_query, _ctx, next) => {
+      calls.push("unreached");
+      return next();
+    });
+
+    bus.register(GetBalance, async () => {
+      calls.push("handler");
+      return ok(100);
+    });
+
+    const result = await bus.execute(GetBalance, "account-1");
+
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.error.kind).toBe("domain");
+      expect(result.error.code).toBe("bank.query-blocked");
+    }
+    expect(calls).toEqual(["short-circuit"]);
+  });
+
   it("returns validation errors before query handler execution", async () => {
     const bus = new QueryBus();
     let handled = false;
