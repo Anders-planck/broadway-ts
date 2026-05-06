@@ -16,7 +16,10 @@
   "scripts": {
     "build": "pnpm -r build",
     "changeset": "changeset",
-    "ci": "pnpm test && pnpm typecheck",
+    "ci": "pnpm test && pnpm typecheck && pnpm docs:build",
+    "docs:build": "vitepress build docs",
+    "docs:dev": "vitepress dev docs",
+    "docs:preview": "vitepress preview docs",
     "release": "changeset publish",
     "test": "pnpm build && pnpm -r test",
     "typecheck": "pnpm -r typecheck",
@@ -26,6 +29,7 @@
     "@changesets/cli": "^2.27.12",
     "tsup": "^8.3.5",
     "typescript": "^5.7.3",
+    "vitepress": "^1.6.4",
     "vitest": "^2.1.8"
   }
 }

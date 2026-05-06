@@ -111,6 +111,24 @@ commandBus.register(DepositMoney, async (command) => {
 
 See [`examples/bank-account`](examples/bank-account) for a complete flow.
 
+## Documentation
+
+The documentation site lives in [`docs`](docs).
+
+```bash
+pnpm docs:dev
+pnpm docs:build
+pnpm docs:preview
+```
+
+Current docs:
+
+- [Getting Started](docs/getting-started.md)
+- [Command and Query Bus](docs/guides/command-query-bus.md)
+- [Event Sourcing](docs/guides/event-sourcing.md)
+- [Testing](docs/guides/testing.md)
+- [Reference](docs/reference/core.md)
+
 ## Development
 
 ```bash

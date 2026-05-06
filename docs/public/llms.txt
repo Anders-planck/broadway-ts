@@ -1,0 +1,26 @@
+# Broadway TS
+
+Broadway TS is a TypeScript-first CQRS and Event Sourcing toolkit inspired by
+Broadway for PHP.
+
+Docs entry points:
+- Overview: /
+- Getting started: /getting-started
+- Command/query bus guide: /guides/command-query-bus
+- Event sourcing guide: /guides/event-sourcing
+- Testing guide: /guides/testing
+- Core reference: /reference/core
+- Event sourcing reference: /reference/event-sourcing
+- Zod reference: /reference/zod
+- Testing reference: /reference/testing
+- Postgres reference: /reference/postgres
+- Roadmap: /roadmap
+
+Package boundaries:
+- @broadway-ts/core: Result, errors, schema contract, command/query definitions, buses, middleware.
+- @broadway-ts/event-sourcing: event definitions, envelopes, EventStore, aggregate base, repository.
+- @broadway-ts/zod: Zod adapter for Schema<T>.
+- @broadway-ts/testing: in-memory event store, fixed clock, deterministic IDs, aggregate scenarios.
+- @broadway-ts/postgres: placeholder for future Postgres EventStore adapter.
+
+Current status: prototype, not published to npm yet.
