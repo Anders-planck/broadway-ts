@@ -1,0 +1,27 @@
+{
+  "name": "@broadway-ts/zod",
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Zod adapter for Broadway TS schemas.",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts --clean",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "peerDependencies": {
+    "@broadway-ts/core": "workspace:*",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "@broadway-ts/core": "workspace:*",
+    "zod": "^3.25.0"
+  }
+}

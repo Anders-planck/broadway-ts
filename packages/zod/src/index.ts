@@ -1,0 +1,24 @@
+import { ok, type Schema, type ValidationIssue } from "@broadway-ts/core";
+import type { z, ZodTypeAny } from "zod";
+
+export const zodSchema = <TSchema extends ZodTypeAny>(
+  schema: TSchema,
+): Schema<z.infer<TSchema>> => ({
+  parse(input: unknown) {
+    const result = schema.safeParse(input);
+
+    if (result.success) {
+      return ok(result.data);
+    }
+
+    const issues: ValidationIssue[] = result.error.issues.map((issue) => ({
+      path: issue.path.map((segment) =>
+        typeof segment === "number" ? segment : String(segment),
+      ),
+      message: issue.message,
+      code: issue.code,
+    }));
+
+    return { ok: false, issues };
+  },
+});
