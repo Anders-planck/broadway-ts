@@ -23,6 +23,12 @@ importers:
 
   packages/core: {}
 
+  packages/event-sourcing:
+    devDependencies:
+      '@broadway-ts/core':
+        specifier: workspace:*
+        version: link:../core
+
   packages/zod:
     devDependencies:
       '@broadway-ts/core':
