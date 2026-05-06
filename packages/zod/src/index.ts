@@ -4,8 +4,8 @@ import type { z, ZodTypeAny } from "zod";
 export const zodSchema = <TSchema extends ZodTypeAny>(
   schema: TSchema,
 ): Schema<z.infer<TSchema>> => ({
-  parse(input: unknown) {
-    const result = schema.safeParse(input);
+  async parse(input: unknown) {
+    const result = await schema.safeParseAsync(input);
 
     if (result.success) {
       return ok(result.data);
