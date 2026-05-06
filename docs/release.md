@@ -24,9 +24,8 @@ Checked on 2026-05-06:
 | `@broadway-ts/postgres` | `E404`, not publicly published |
 
 `npm whoami` returns `anders-game`, so the local npm CLI is authenticated.
-`npm org ls broadway-ts` returns `E404 Scope not found`, so the `@broadway-ts`
-npm org/scope still needs to be created or the package scope must be changed
-before publishing.
+`npm org ls broadway-ts` returns `anders-game - owner`, so the `@broadway-ts`
+npm org/scope exists and the authenticated npm account can publish under it.
 
 ## Pack Dry Run
 
@@ -42,14 +41,11 @@ before publishing.
 
 ## Required Before Publish
 
-1. Log in to npm locally or create an npm automation token.
-2. Create the npm org/scope `@broadway-ts` or choose a different publish scope.
-3. Confirm the npm account `anders-game` has
-   publish rights.
-4. Add `NPM_TOKEN` to GitHub repository secrets.
-5. Enable the GitHub repository setting that allows Actions to create pull
+1. Create an npm automation token for `anders-game`.
+2. Add `NPM_TOKEN` to GitHub repository secrets.
+3. Enable the GitHub repository setting that allows Actions to create pull
    requests if using Changesets release PRs.
-6. Decide whether `@broadway-ts/postgres` should ship as a placeholder in the
+4. Decide whether `@broadway-ts/postgres` should ship as a placeholder in the
    first release.
 
 ## Release Commands
