@@ -67,6 +67,10 @@ export class AggregateRepository<TAggregate extends EventSourcedAggregate> {
       readonly correlationId?: string;
     } = {},
   ): Promise<Result<readonly EventEnvelope[], ConcurrencyError | PersistenceError>> {
+    if (aggregate.pendingEvents.length === 0) {
+      return ok([]);
+    }
+
     const streamId = this.#streamName(Aggregate, aggregate.id);
     const events = aggregate.pendingEvents.map((event) =>
       this.#toEventData(event, context),
