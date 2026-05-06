@@ -16,6 +16,7 @@ Docs entry points:
 - Testing reference: /reference/testing
 - Postgres reference: /reference/postgres
 - Roadmap: /roadmap
+- Release checklist: /release
 - Generated API docs: /api/
 
 Package boundaries:

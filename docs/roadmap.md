@@ -2,7 +2,8 @@
 
 ## Before First npm Release
 
-- Confirm npm scope `@broadway-ts`
+- Create npm org/scope `@broadway-ts` or choose a different publish scope
+- Confirm npm account `anders-game` has publish permissions
 - Add `NPM_TOKEN` to GitHub repository secrets
 - Run the manual Release workflow
 - Decide whether `@broadway-ts/postgres` ships as a placeholder or waits for a
@@ -34,3 +35,7 @@
 ## Completed
 
 - Type-level tests for public API inference
+- GitHub Pages documentation deploy
+- Generated API docs with TypeDoc
+- End-to-end bank-account tutorial page
+- Public package pack dry-run for all publishable packages

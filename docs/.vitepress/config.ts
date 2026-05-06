@@ -55,7 +55,10 @@ export default defineConfig({
       },
       {
         text: "Project",
-        items: [{ text: "Roadmap", link: "/roadmap" }],
+        items: [
+          { text: "Roadmap", link: "/roadmap" },
+          { text: "Release Checklist", link: "/release" },
+        ],
       },
     ],
     search: {

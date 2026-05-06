@@ -129,6 +129,7 @@ Current docs:
 - [Event Sourcing](docs/guides/event-sourcing.md)
 - [Testing](docs/guides/testing.md)
 - [Reference](docs/reference/core.md)
+- [Release Checklist](docs/release.md)
 
 ## Development
 

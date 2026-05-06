@@ -56,3 +56,5 @@ Start with [Getting Started](/getting-started), then read the two main guides:
 - [Event Sourcing](/guides/event-sourcing)
 
 Generated API docs are available at [/api/](/api/).
+
+Release status is tracked in the [Release Checklist](/release).
