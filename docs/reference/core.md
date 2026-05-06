@@ -82,6 +82,27 @@ Exports:
 - `QueryMiddleware`
 - `BusContext`
 
+## Type-Level Coverage
+
+Core inference is covered in `packages/core/test/type-inference.test.ts`.
+
+Covered surfaces:
+
+- `defineCommand`
+- `defineQuery`
+- `CommandOf<TDefinition>`
+- `QueryOf<TDefinition>`
+- `PayloadOf<TDefinition>`
+- `ResultOf<TDefinition>`
+- `ErrorOf<TDefinition>`
+- custom `CommandBus<TContext>` contexts
+
+Run:
+
+```bash
+pnpm --filter @broadway-ts/core typecheck
+```
+
 ## Errors
 
 Factory exports:

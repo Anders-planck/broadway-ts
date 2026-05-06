@@ -83,3 +83,22 @@ Methods:
 - `save(Aggregate, aggregate, expectedVersion?, context?)`
 
 The default stream name is `${Aggregate.aggregateType}-${aggregateId}`.
+
+## Type-Level Coverage
+
+Event-sourcing inference is covered in
+`packages/event-sourcing/test/type-inference.test.ts`.
+
+Covered surfaces:
+
+- `defineEvent`
+- `EventPayloadOf<TDefinition>`
+- event type and version literals
+- `AggregateRepository.load`
+- `AggregateRepository.save`
+
+Run:
+
+```bash
+pnpm --filter @broadway-ts/event-sourcing typecheck
+```

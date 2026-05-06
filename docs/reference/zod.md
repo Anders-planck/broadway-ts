@@ -28,3 +28,19 @@ Peer dependencies:
 
 - `@broadway-ts/core`
 - `zod`
+
+## Type-Level Coverage
+
+Zod adapter inference is covered in `packages/zod/test/type-inference.test.ts`.
+
+Covered surfaces:
+
+- `zodSchema`
+- `Schema<T>`
+- `InferSchema<TSchema>`
+
+Run:
+
+```bash
+pnpm --filter @broadway-ts/zod typecheck
+```

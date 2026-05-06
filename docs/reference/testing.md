@@ -48,3 +48,21 @@ Returns:
 - `result`
 - `pendingEvents`
 - `aggregate`
+
+## Type-Level Coverage
+
+Testing helper inference is covered in
+`packages/testing/test/type-inference.test.ts`.
+
+Covered surfaces:
+
+- `InMemoryEventStore` as `EventStore`
+- `FixedClock`
+- `SequenceIdProvider`
+- `aggregateScenario`
+
+Run:
+
+```bash
+pnpm --filter @broadway-ts/testing typecheck
+```

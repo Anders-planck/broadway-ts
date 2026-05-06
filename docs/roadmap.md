@@ -5,7 +5,6 @@
 - Confirm npm scope `@broadway-ts`
 - Add `NPM_TOKEN` to GitHub repository secrets
 - Run the manual Release workflow
-- Add type-level tests for public API inference
 - Decide whether `@broadway-ts/postgres` ships as a placeholder or waits for a
   working adapter
 
@@ -31,3 +30,7 @@
 - Add branch protection requiring CI
 - Add release notes template
 - Add contribution guide
+
+## Completed
+
+- Type-level tests for public API inference

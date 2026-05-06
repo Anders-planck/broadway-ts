@@ -55,3 +55,16 @@ The helper returns:
 - `result`: whatever the aggregate action returned
 - `pendingEvents`: a snapshot of newly recorded pending events
 - `aggregate`: the mutated aggregate instance
+
+## Type-Level Tests
+
+Public API inference is covered with Vitest `expectTypeOf` assertions in package
+test files:
+
+```bash
+pnpm typecheck
+```
+
+These assertions compile command/query definitions, event definitions, Zod
+schemas, repositories, and testing helpers. `pnpm run ci` runs them through the
+same typecheck step.

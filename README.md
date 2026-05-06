@@ -139,6 +139,9 @@ pnpm typecheck
 pnpm build
 ```
 
+Type-level tests use Vitest `expectTypeOf` assertions in package test files and
+run through `pnpm typecheck` and `pnpm run ci`.
+
 ## Release
 
 Changesets is configured, but npm publishing is not enabled until `NPM_TOKEN`

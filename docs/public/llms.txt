@@ -26,3 +26,4 @@ Package boundaries:
 - @broadway-ts/postgres: placeholder for future Postgres EventStore adapter.
 
 Current status: prototype, not published to npm yet.
+Type-level tests use Vitest expectTypeOf assertions and run through pnpm typecheck.
