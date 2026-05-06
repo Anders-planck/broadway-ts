@@ -1,0 +1,17 @@
+{
+  "name": "bank-account-example",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "build": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@broadway-ts/core": "workspace:*",
+    "@broadway-ts/event-sourcing": "workspace:*",
+    "@broadway-ts/testing": "workspace:*",
+    "@broadway-ts/zod": "workspace:*",
+    "zod": "^3.25.0"
+  }
+}

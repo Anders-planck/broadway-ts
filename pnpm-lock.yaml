@@ -21,6 +21,24 @@ importers:
         specifier: ^2.1.8
         version: 2.1.9
 
+  examples/bank-account:
+    dependencies:
+      '@broadway-ts/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@broadway-ts/event-sourcing':
+        specifier: workspace:*
+        version: link:../../packages/event-sourcing
+      '@broadway-ts/testing':
+        specifier: workspace:*
+        version: link:../../packages/testing
+      '@broadway-ts/zod':
+        specifier: workspace:*
+        version: link:../../packages/zod
+      zod:
+        specifier: ^3.25.0
+        version: 3.25.76
+
   packages/core: {}
 
   packages/event-sourcing:
