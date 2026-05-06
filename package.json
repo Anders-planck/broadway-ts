@@ -17,8 +17,9 @@
     "build": "pnpm -r build",
     "changeset": "changeset",
     "ci": "pnpm test && pnpm typecheck && pnpm docs:build",
-    "docs:build": "vitepress build docs",
-    "docs:dev": "vitepress dev docs",
+    "docs:api": "typedoc",
+    "docs:build": "pnpm docs:api && vitepress build docs",
+    "docs:dev": "pnpm docs:api && vitepress dev docs",
     "docs:preview": "vitepress preview docs",
     "release": "changeset publish",
     "test": "pnpm build && pnpm -r test",
@@ -28,6 +29,7 @@
   "devDependencies": {
     "@changesets/cli": "^2.27.12",
     "tsup": "^8.3.5",
+    "typedoc": "^0.28.19",
     "typescript": "^5.7.3",
     "vitepress": "^1.6.4",
     "vitest": "^2.1.8"

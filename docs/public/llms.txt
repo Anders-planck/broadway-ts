@@ -6,6 +6,7 @@ Broadway for PHP.
 Docs entry points:
 - Overview: /
 - Getting started: /getting-started
+- Bank account tutorial: /tutorials/bank-account
 - Command/query bus guide: /guides/command-query-bus
 - Event sourcing guide: /guides/event-sourcing
 - Testing guide: /guides/testing
@@ -15,6 +16,7 @@ Docs entry points:
 - Testing reference: /reference/testing
 - Postgres reference: /reference/postgres
 - Roadmap: /roadmap
+- Generated API docs: /api/
 
 Package boundaries:
 - @broadway-ts/core: Result, errors, schema contract, command/query definitions, buses, middleware.

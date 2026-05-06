@@ -2,16 +2,19 @@ import { validationError, type CqrsError, type ValidationError } from "./errors.
 import { err, ok, type Result } from "./result.js";
 import type { InferSchema, Schema } from "./schema.js";
 
+/** Compile-time marker used to attach result or error types to definitions. */
 export type TypeToken<T> = {
   readonly __type?: T;
 };
 
+/** Create a compile-time type token without runtime data. */
 export const typeToken = <T>(): TypeToken<T> => ({});
 
 type TokenValue<TToken, TFallback> = TToken extends TypeToken<infer TValue>
   ? TValue
   : TFallback;
 
+/** Shared shape for command and query definitions. */
 export type MessageDefinition<
   TKind extends "command" | "query",
   TType extends string,
@@ -26,6 +29,7 @@ export type MessageDefinition<
   readonly error?: TypeToken<TError>;
 };
 
+/** Definition for a command message. */
 export type CommandDefinition<
   TType extends string,
   TPayload,
@@ -33,6 +37,7 @@ export type CommandDefinition<
   TError extends CqrsError = CqrsError,
 > = MessageDefinition<"command", TType, TPayload, TResult, TError>;
 
+/** Definition for a query message. */
 export type QueryDefinition<
   TType extends string,
   TPayload,
@@ -40,6 +45,7 @@ export type QueryDefinition<
   TError extends CqrsError = CqrsError,
 > = MessageDefinition<"query", TType, TPayload, TResult, TError>;
 
+/** Extract the parsed payload type from a command or query definition. */
 export type PayloadOf<TDefinition> =
   TDefinition extends MessageDefinition<
     "command" | "query",
@@ -51,6 +57,7 @@ export type PayloadOf<TDefinition> =
     ? TPayload
     : never;
 
+/** Extract the handler result value type from a command or query definition. */
 export type ResultOf<TDefinition> =
   TDefinition extends MessageDefinition<
     "command" | "query",
@@ -62,6 +69,7 @@ export type ResultOf<TDefinition> =
     ? TResult
     : never;
 
+/** Extract the handler error type from a command or query definition. */
 export type ErrorOf<TDefinition> =
   TDefinition extends MessageDefinition<
     "command" | "query",
@@ -73,6 +81,7 @@ export type ErrorOf<TDefinition> =
     ? TError
     : never;
 
+/** Runtime message shape passed to command and query handlers. */
 export type MessageOf<
   TDefinition extends MessageDefinition<"command" | "query", string, unknown, unknown, CqrsError>,
 > = {
@@ -80,12 +89,15 @@ export type MessageOf<
   readonly payload: PayloadOf<TDefinition>;
 };
 
+/** Runtime command shape inferred from a command definition. */
 export type CommandOf<TDefinition extends CommandDefinition<string, unknown, unknown, CqrsError>> =
   MessageOf<TDefinition>;
 
+/** Runtime query shape inferred from a query definition. */
 export type QueryOf<TDefinition extends QueryDefinition<string, unknown, unknown, CqrsError>> =
   MessageOf<TDefinition>;
 
+/** Define a command contract with payload validation and optional result/error type tokens. */
 export const defineCommand = <
   const TType extends string,
   TSchema extends Schema<unknown>,
@@ -117,6 +129,7 @@ export const defineCommand = <
       }),
 });
 
+/** Define a query contract with payload validation and optional result/error type tokens. */
 export const defineQuery = <
   const TType extends string,
   TSchema extends Schema<unknown>,
@@ -166,6 +179,7 @@ const parseMessage = async <
   } as MessageOf<TDefinition>);
 };
 
+/** Parse unknown input into a typed command message. */
 export const parseCommand = <
   TDefinition extends CommandDefinition<string, unknown, unknown, CqrsError>,
 >(
@@ -173,6 +187,7 @@ export const parseCommand = <
   input: unknown,
 ): Promise<Result<CommandOf<TDefinition>, ValidationError>> => parseMessage(definition, input);
 
+/** Parse unknown input into a typed query message. */
 export const parseQuery = <
   TDefinition extends QueryDefinition<string, unknown, unknown, CqrsError>,
 >(

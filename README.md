@@ -124,6 +124,7 @@ pnpm docs:preview
 Current docs:
 
 - [Getting Started](docs/getting-started.md)
+- [Bank Account Tutorial](docs/tutorials/bank-account.md)
 - [Command and Query Bus](docs/guides/command-query-bus.md)
 - [Event Sourcing](docs/guides/event-sourcing.md)
 - [Testing](docs/guides/testing.md)

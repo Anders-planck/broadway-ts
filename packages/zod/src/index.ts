@@ -1,6 +1,12 @@
+/**
+ * Zod adapter for the Broadway TS schema contract.
+ *
+ * @packageDocumentation
+ */
 import { ok, type Schema, type ValidationIssue } from "@broadway-ts/core";
 import type { z, ZodTypeAny } from "zod";
 
+/** Adapt a Zod schema to the Broadway TS Schema<T> contract. */
 export const zodSchema = <TSchema extends ZodTypeAny>(
   schema: TSchema,
 ): Schema<z.infer<TSchema>> => ({

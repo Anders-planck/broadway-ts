@@ -1,9 +1,11 @@
+/** One validation issue for a specific payload path. */
 export type ValidationIssue = {
   readonly path: readonly (string | number)[];
   readonly message: string;
   readonly code?: string;
 };
 
+/** Error returned when a command, query, or event payload fails validation. */
 export type ValidationError = {
   readonly kind: "validation";
   readonly code: "validation.invalid_payload";
@@ -11,6 +13,7 @@ export type ValidationError = {
   readonly issues: readonly ValidationIssue[];
 };
 
+/** Error returned when a bus has no handler for a message type. */
 export type HandlerNotFoundError = {
   readonly kind: "handler_not_found";
   readonly code: "handler.not_found";
@@ -19,6 +22,7 @@ export type HandlerNotFoundError = {
   readonly messageType: string;
 };
 
+/** Application-level business rule failure. */
 export type DomainError = {
   readonly kind: "domain";
   readonly code: string;
@@ -26,6 +30,7 @@ export type DomainError = {
   readonly details?: unknown;
 };
 
+/** Optimistic concurrency failure from an event store append. */
 export type ConcurrencyError = {
   readonly kind: "concurrency";
   readonly code: "event_store.concurrency_conflict";
@@ -34,6 +39,7 @@ export type ConcurrencyError = {
   readonly actualVersion?: number;
 };
 
+/** Storage or adapter failure from an event store or repository. */
 export type PersistenceError = {
   readonly kind: "persistence";
   readonly code: string;
@@ -41,6 +47,7 @@ export type PersistenceError = {
   readonly cause?: unknown;
 };
 
+/** Union of built-in Broadway TS error shapes. */
 export type CqrsError =
   | ValidationError
   | HandlerNotFoundError
@@ -48,6 +55,7 @@ export type CqrsError =
   | ConcurrencyError
   | PersistenceError;
 
+/** Create a validation error from validation issues. */
 export const validationError = (issues: readonly ValidationIssue[]): ValidationError => ({
   kind: "validation",
   code: "validation.invalid_payload",
@@ -55,6 +63,7 @@ export const validationError = (issues: readonly ValidationIssue[]): ValidationE
   issues,
 });
 
+/** Create a missing handler error for a command or query type. */
 export const handlerNotFoundError = (
   handlerType: "command" | "query",
   messageType: string,
@@ -66,6 +75,7 @@ export const handlerNotFoundError = (
   messageType,
 });
 
+/** Create an application domain error. */
 export const domainError = (
   code: string,
   message: string,
@@ -77,6 +87,7 @@ export const domainError = (
   ...(details === undefined ? {} : { details }),
 });
 
+/** Create an optimistic concurrency error. */
 export const concurrencyError = (
   expectedVersion: number | string,
   actualVersion?: number,
@@ -88,6 +99,7 @@ export const concurrencyError = (
   ...(actualVersion === undefined ? {} : { actualVersion }),
 });
 
+/** Create a storage or adapter persistence error. */
 export const persistenceError = (
   code: string,
   message: string,

@@ -6,9 +6,11 @@ import type {
   ExpectedVersion,
 } from "@broadway-ts/event-sourcing";
 
+/** In-memory EventStore implementation for tests and examples. */
 export class InMemoryEventStore implements EventStore {
   readonly #streams = new Map<string, EventEnvelope[]>();
 
+  /** Append events to a stream if the expected version matches. */
   async append(
     streamId: string,
     events: readonly EventData[],
@@ -38,6 +40,7 @@ export class InMemoryEventStore implements EventStore {
     return ok(appended);
   }
 
+  /** Read all events from a stream as a copied array. */
   async readStream(streamId: string): Promise<Result<readonly EventEnvelope[], never>> {
     return ok([...(this.#streams.get(streamId) ?? [])]);
   }

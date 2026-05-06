@@ -5,6 +5,7 @@ import type {
   PendingEvent,
 } from "@broadway-ts/event-sourcing";
 
+/** Build a direct aggregate test scenario from given events and one action. */
 export const aggregateScenario = <TAggregate extends EventSourcedAggregate>(
   Aggregate: AggregateConstructor<TAggregate>,
   aggregateId: string,

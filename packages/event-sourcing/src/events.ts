@@ -8,6 +8,7 @@ import {
   type ValidationError,
 } from "@broadway-ts/core";
 
+/** Definition for a versioned domain event payload. */
 export type EventDefinition<
   TType extends string,
   TVersion extends number,
@@ -18,9 +19,11 @@ export type EventDefinition<
   readonly schema: Schema<TPayload>;
 };
 
+/** Extract the payload type from an event definition. */
 export type EventPayloadOf<TDefinition> =
   TDefinition extends EventDefinition<string, number, infer TPayload> ? TPayload : never;
 
+/** Persisted event with stream position and trace metadata. */
 export type EventEnvelope<TPayload = unknown, TMetadata = Record<string, unknown>> = {
   readonly eventId: string;
   readonly type: string;
@@ -36,6 +39,7 @@ export type EventEnvelope<TPayload = unknown, TMetadata = Record<string, unknown
   readonly occurredAt: Date;
 };
 
+/** Event recorded by an aggregate before it is appended to an event store. */
 export type PendingEvent<TPayload = unknown, TMetadata = Record<string, unknown>> = {
   readonly type: string;
   readonly version: number;
@@ -45,11 +49,13 @@ export type PendingEvent<TPayload = unknown, TMetadata = Record<string, unknown>
   readonly metadata: TMetadata;
 };
 
+/** Event data ready for persistence before stream fields are assigned. */
 export type EventData<TPayload = unknown, TMetadata = Record<string, unknown>> = Omit<
   EventEnvelope<TPayload, TMetadata>,
   "streamId" | "streamVersion"
 >;
 
+/** Define a versioned event contract with payload validation. */
 export const defineEvent = <
   const TType extends string,
   const TVersion extends number,
@@ -64,6 +70,7 @@ export const defineEvent = <
   schema: config.schema as Schema<InferSchema<TSchema>>,
 });
 
+/** Parse unknown input against an event definition payload schema. */
 export const parseEventPayload = async <
   TDefinition extends EventDefinition<string, number, unknown>,
 >(

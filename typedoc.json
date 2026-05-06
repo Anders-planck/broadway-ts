@@ -1,0 +1,21 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "name": "Broadway TS API",
+  "entryPoints": [
+    "packages/core/src/index.ts",
+    "packages/event-sourcing/src/index.ts",
+    "packages/zod/src/index.ts",
+    "packages/testing/src/index.ts",
+    "packages/postgres/src/index.ts"
+  ],
+  "entryPointStrategy": "expand",
+  "tsconfig": "tsconfig.typedoc.json",
+  "out": "docs/public/api",
+  "readme": "none",
+  "excludePrivate": true,
+  "excludeInternal": true,
+  "excludeExternals": true,
+  "hideGenerator": true,
+  "cleanOutputDir": true,
+  "sort": ["source-order"]
+}

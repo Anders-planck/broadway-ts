@@ -51,5 +51,8 @@ npm release is not published yet.
 
 Start with [Getting Started](/getting-started), then read the two main guides:
 
+- [Bank Account Tutorial](/tutorials/bank-account)
 - [Command and Query Bus](/guides/command-query-bus)
 - [Event Sourcing](/guides/event-sourcing)
+
+Generated API docs are available at [/api/](/api/).

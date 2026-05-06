@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@broadway-ts/core": ["packages/core/src/index.ts"],
+      "@broadway-ts/event-sourcing": ["packages/event-sourcing/src/index.ts"],
+      "@broadway-ts/postgres": ["packages/postgres/src/index.ts"],
+      "@broadway-ts/testing": ["packages/testing/src/index.ts"],
+      "@broadway-ts/zod": ["packages/zod/src/index.ts"]
+    }
+  },
+  "include": ["packages/*/src/**/*.ts"]
+}

@@ -16,6 +16,7 @@ import {
 } from "./definition.js";
 import { err, type Awaitable, type Result } from "./result.js";
 
+/** Context passed through bus middleware and handlers. */
 export type BusContext = {
   readonly correlationId?: string;
   readonly causationId?: string;
@@ -23,6 +24,7 @@ export type BusContext = {
   readonly signal?: AbortSignal;
 };
 
+/** Handler for a command definition. */
 export type CommandHandler<
   TDefinition extends CommandDefinition<string, unknown, unknown, CqrsError>,
   TContext extends BusContext = BusContext,
@@ -31,6 +33,7 @@ export type CommandHandler<
   ctx: TContext,
 ) => Awaitable<Result<ResultOf<TDefinition>, ErrorOf<TDefinition>>>;
 
+/** Handler for a query definition. */
 export type QueryHandler<
   TDefinition extends QueryDefinition<string, unknown, unknown, CqrsError>,
   TContext extends BusContext = BusContext,
@@ -39,16 +42,20 @@ export type QueryHandler<
   ctx: TContext,
 ) => Awaitable<Result<ResultOf<TDefinition>, ErrorOf<TDefinition>>>;
 
+/** Any typed command message accepted by command middleware. */
 export type AnyCommand = CommandOf<CommandDefinition<string, unknown, unknown, CqrsError>>;
 
+/** Any typed query message accepted by query middleware. */
 export type AnyQuery = QueryOf<QueryDefinition<string, unknown, unknown, CqrsError>>;
 
+/** Middleware that wraps command handler execution. */
 export type CommandMiddleware<TContext extends BusContext = BusContext> = (
   command: AnyCommand,
   ctx: TContext,
   next: () => Promise<Result<unknown, CqrsError>>,
 ) => Awaitable<Result<unknown, CqrsError>>;
 
+/** Middleware that wraps query handler execution. */
 export type QueryMiddleware<TContext extends BusContext = BusContext> = (
   query: AnyQuery,
   ctx: TContext,
@@ -77,10 +84,12 @@ type BusError<TDefinition> =
   | HandlerNotFoundError
   | CqrsError;
 
+/** Validates and dispatches commands to registered handlers. */
 export class CommandBus<TContext extends BusContext = BusContext> {
   readonly #handlers = new Map<string, AnyCommandHandler<TContext>>();
   readonly #middleware: CommandMiddleware<TContext>[] = [];
 
+  /** Register exactly one handler for a command definition. */
   register<TDefinition extends CommandDefinition<string, unknown, unknown, CqrsError>>(
     definition: TDefinition,
     handler: CommandHandler<TDefinition, TContext>,
@@ -95,11 +104,13 @@ export class CommandBus<TContext extends BusContext = BusContext> {
     return this;
   }
 
+  /** Add middleware to the command execution pipeline. */
   use(middleware: CommandMiddleware<TContext>): this {
     this.#middleware.push(middleware);
     return this;
   }
 
+  /** Validate input, run middleware, and invoke the registered command handler. */
   async execute<TDefinition extends CommandDefinition<string, unknown, unknown, CqrsError>>(
     definition: TDefinition,
     input: unknown,
@@ -129,10 +140,12 @@ export class CommandBus<TContext extends BusContext = BusContext> {
   }
 }
 
+/** Validates and dispatches queries to registered handlers. */
 export class QueryBus<TContext extends BusContext = BusContext> {
   readonly #handlers = new Map<string, AnyQueryHandler<TContext>>();
   readonly #middleware: QueryMiddleware<TContext>[] = [];
 
+  /** Register exactly one handler for a query definition. */
   register<TDefinition extends QueryDefinition<string, unknown, unknown, CqrsError>>(
     definition: TDefinition,
     handler: QueryHandler<TDefinition, TContext>,
@@ -147,11 +160,13 @@ export class QueryBus<TContext extends BusContext = BusContext> {
     return this;
   }
 
+  /** Add middleware to the query execution pipeline. */
   use(middleware: QueryMiddleware<TContext>): this {
     this.#middleware.push(middleware);
     return this;
   }
 
+  /** Validate input, run middleware, and invoke the registered query handler. */
   async execute<TDefinition extends QueryDefinition<string, unknown, unknown, CqrsError>>(
     definition: TDefinition,
     input: unknown,

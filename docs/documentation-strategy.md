@@ -8,8 +8,8 @@ This page records the docs approach used for Broadway TS.
   explanation, and reference. Broadway TS uses that as the content model.
 - [VitePress](https://vitepress.dev/) gives a Markdown-first static docs site
   with local search, navigation, clean URLs, and GitHub edit links.
-- [TypeDoc](https://typedoc.org/) is the right API-doc generator for TypeScript,
-  but generated API docs are deferred until exported APIs have useful TSDoc.
+- [TypeDoc](https://typedoc.org/) generates static HTML API docs from exported
+  TypeScript symbols.
 - [Mintlify](https://mintlify.com/docs/quickstart) is a useful reference for
   concise, task-focused developer docs and AI-readable docs, but Broadway TS can
   keep the stack simpler with VitePress.
@@ -24,11 +24,11 @@ Use VitePress now, with hand-written docs organized by Diataxis-style intent:
 - Reference: exported package surface
 - Project: roadmap and release state
 
-## Why Not Generated API First
+## Generated API
 
-The repository currently has a small public API and little TSDoc. Running
-TypeDoc immediately would generate low-value symbol listings. Manual reference
-pages are more useful until public API comments are written.
+TypeDoc output is generated into `docs/public/api` during `pnpm docs:build`.
+VitePress copies that static output to `/api/`. The generated files are not
+committed; source comments and TypeDoc config are.
 
 ## Page Rules
 

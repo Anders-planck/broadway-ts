@@ -11,6 +11,7 @@ export default defineConfig({
     nav: [
       { text: "Guide", link: "/getting-started" },
       { text: "Reference", link: "/reference/core" },
+      { text: "API", link: "/api/" },
       { text: "Roadmap", link: "/roadmap" },
     ],
     sidebar: [
@@ -21,6 +22,10 @@ export default defineConfig({
           { text: "Getting Started", link: "/getting-started" },
           { text: "Documentation Strategy", link: "/documentation-strategy" },
         ],
+      },
+      {
+        text: "Tutorials",
+        items: [{ text: "Bank Account", link: "/tutorials/bank-account" }],
       },
       {
         text: "Guides",

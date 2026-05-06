@@ -9,16 +9,19 @@ import type { EventData, EventEnvelope, PendingEvent } from "./events.js";
 import type { EventStore, ExpectedVersion } from "./event-store.js";
 import type { Clock, IdProvider } from "./providers.js";
 
+/** Constructor contract required by aggregate repositories. */
 export type AggregateConstructor<TAggregate extends EventSourcedAggregate> = {
   readonly aggregateType: string;
   new (id: string): TAggregate;
 };
 
+/** Function that maps an aggregate type and id to an event stream id. */
 export type StreamNameStrategy<TAggregate extends EventSourcedAggregate> = (
   Aggregate: AggregateConstructor<TAggregate>,
   aggregateId: string,
 ) => string;
 
+/** Dependencies and options for an aggregate repository. */
 export type AggregateRepositoryOptions<TAggregate extends EventSourcedAggregate> = {
   readonly eventStore: EventStore;
   readonly clock: Clock;
@@ -26,6 +29,7 @@ export type AggregateRepositoryOptions<TAggregate extends EventSourcedAggregate>
   readonly streamName?: StreamNameStrategy<TAggregate>;
 };
 
+/** Loads and saves event-sourced aggregates through an EventStore. */
 export class AggregateRepository<TAggregate extends EventSourcedAggregate> {
   readonly #eventStore: EventStore;
   readonly #clock: Clock;
@@ -41,6 +45,7 @@ export class AggregateRepository<TAggregate extends EventSourcedAggregate> {
       ((Aggregate, aggregateId) => `${Aggregate.aggregateType}-${aggregateId}`);
   }
 
+  /** Load an aggregate by replaying all events from its stream. */
   async load(
     Aggregate: AggregateConstructor<TAggregate>,
     aggregateId: string,
@@ -58,6 +63,7 @@ export class AggregateRepository<TAggregate extends EventSourcedAggregate> {
     return ok(aggregate);
   }
 
+  /** Append pending events and mark the aggregate committed on success. */
   async save(
     Aggregate: AggregateConstructor<TAggregate>,
     aggregate: TAggregate,
