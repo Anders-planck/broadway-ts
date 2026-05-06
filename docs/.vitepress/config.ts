@@ -4,6 +4,7 @@ export default defineConfig({
   title: "Broadway TS",
   description:
     "TypeScript-first CQRS and Event Sourcing toolkit inspired by Broadway for PHP.",
+  base: "/broadway-ts/",
   cleanUrls: true,
   lastUpdated: true,
   srcExclude: ["superpowers/**/*.md"],
