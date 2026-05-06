@@ -2,10 +2,9 @@
 
 ## Before First npm Release
 
-- Add `NPM_TOKEN` to GitHub repository secrets
 - Run the manual Release workflow
-- Decide whether `@broadway-ts/postgres` ships as a placeholder or waits for a
-  working adapter
+- Review and merge the Changesets release PR
+- Confirm npm packages are published
 
 ## Package Work
 
@@ -38,3 +37,6 @@
 - End-to-end bank-account tutorial page
 - Public package pack dry-run for all publishable packages
 - npm org/scope `@broadway-ts` created with `anders-game` owner access
+- `NPM_TOKEN` added to GitHub repository secrets
+- GitHub Actions workflow permissions set to `write`
+- `@broadway-ts/postgres` selected for first release as a documented placeholder

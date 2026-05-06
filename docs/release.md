@@ -8,6 +8,8 @@ This page tracks the first npm release flow for Broadway TS.
 - Changesets is configured in `.changeset/config.json`
 - Initial patch changeset exists: `.changeset/repo-readiness.md`
 - GitHub Pages docs deploy is active
+- GitHub Actions workflow permissions are set to `write`
+- Repository secret `NPM_TOKEN` exists
 - `pnpm run ci` builds packages, runs tests, typechecks, generates TypeDoc, and
   builds VitePress docs
 
@@ -41,12 +43,13 @@ npm org/scope exists and the authenticated npm account can publish under it.
 
 ## Required Before Publish
 
-1. Create an npm automation token for `anders-game`.
-2. Add `NPM_TOKEN` to GitHub repository secrets.
-3. Enable the GitHub repository setting that allows Actions to create pull
-   requests if using Changesets release PRs.
-4. Decide whether `@broadway-ts/postgres` should ship as a placeholder in the
-   first release.
+1. Run the manual `Release` workflow.
+2. Review the Changesets release PR.
+3. Merge the release PR if versions and changelog are correct.
+4. Confirm the workflow publishes all package versions to npm.
+
+`@broadway-ts/postgres` ships in the first release as a documented placeholder.
+The real Postgres event store adapter remains tracked separately in issue #4.
 
 ## Release Commands
 
@@ -68,8 +71,7 @@ pnpm release
 
 GitHub flow:
 
-1. Add `NPM_TOKEN` to repository secrets.
-2. Run the manual `Release` workflow.
-3. Let Changesets open a release PR.
-4. Merge the release PR.
-5. Run or let the workflow publish the versioned packages.
+1. Run the manual `Release` workflow.
+2. Let Changesets open a release PR.
+3. Merge the release PR.
+4. Run or let the workflow publish the versioned packages.
