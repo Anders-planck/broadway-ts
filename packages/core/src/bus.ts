@@ -39,47 +39,37 @@ export type QueryHandler<
   ctx: TContext,
 ) => Awaitable<Result<ResultOf<TDefinition>, ErrorOf<TDefinition>>>;
 
-export type CommandMiddleware<
-  TDefinition extends CommandDefinition<string, unknown, unknown, CqrsError>,
-  TContext extends BusContext = BusContext,
-> = (
-  command: CommandOf<TDefinition>,
-  ctx: TContext,
-  next: () => Promise<Result<ResultOf<TDefinition>, ErrorOf<TDefinition> | CqrsError>>,
-) => Awaitable<Result<ResultOf<TDefinition>, ErrorOf<TDefinition> | CqrsError>>;
+export type AnyCommand = CommandOf<CommandDefinition<string, unknown, unknown, CqrsError>>;
 
-export type QueryMiddleware<
-  TDefinition extends QueryDefinition<string, unknown, unknown, CqrsError>,
-  TContext extends BusContext = BusContext,
-> = (
-  query: QueryOf<TDefinition>,
+export type AnyQuery = QueryOf<QueryDefinition<string, unknown, unknown, CqrsError>>;
+
+export type CommandMiddleware<TContext extends BusContext = BusContext> = (
+  command: AnyCommand,
   ctx: TContext,
-  next: () => Promise<Result<ResultOf<TDefinition>, ErrorOf<TDefinition> | CqrsError>>,
-) => Awaitable<Result<ResultOf<TDefinition>, ErrorOf<TDefinition> | CqrsError>>;
+  next: () => Promise<Result<unknown, CqrsError>>,
+) => Awaitable<Result<unknown, CqrsError>>;
+
+export type QueryMiddleware<TContext extends BusContext = BusContext> = (
+  query: AnyQuery,
+  ctx: TContext,
+  next: () => Promise<Result<unknown, CqrsError>>,
+) => Awaitable<Result<unknown, CqrsError>>;
 
 type AnyCommandHandler<TContext extends BusContext> = (
-  command: CommandOf<CommandDefinition<string, unknown, unknown, CqrsError>>,
+  command: AnyCommand,
   ctx: TContext,
 ) => Promise<Result<unknown, CqrsError>>;
 
 type AnyQueryHandler<TContext extends BusContext> = (
-  query: QueryOf<QueryDefinition<string, unknown, unknown, CqrsError>>,
+  query: AnyQuery,
   ctx: TContext,
-) => Promise<Result<unknown, CqrsError>>;
-
-type AnyCommandMiddleware<TContext extends BusContext> = (
-  command: CommandOf<CommandDefinition<string, unknown, unknown, CqrsError>>,
-  ctx: TContext,
-  next: () => Promise<Result<unknown, CqrsError>>,
-) => Promise<Result<unknown, CqrsError>>;
-
-type AnyQueryMiddleware<TContext extends BusContext> = (
-  query: QueryOf<QueryDefinition<string, unknown, unknown, CqrsError>>,
-  ctx: TContext,
-  next: () => Promise<Result<unknown, CqrsError>>,
 ) => Promise<Result<unknown, CqrsError>>;
 
 type AnyNext = () => Promise<Result<unknown, CqrsError>>;
+
+type ExecuteContextArgs<TContext extends BusContext> = BusContext extends TContext
+  ? [ctx?: TContext]
+  : [ctx: TContext];
 
 type BusError<TDefinition> =
   | ErrorOf<TDefinition>
@@ -89,36 +79,33 @@ type BusError<TDefinition> =
 
 export class CommandBus<TContext extends BusContext = BusContext> {
   readonly #handlers = new Map<string, AnyCommandHandler<TContext>>();
-  readonly #middleware: AnyCommandMiddleware<TContext>[] = [];
+  readonly #middleware: CommandMiddleware<TContext>[] = [];
 
   register<TDefinition extends CommandDefinition<string, unknown, unknown, CqrsError>>(
     definition: TDefinition,
     handler: CommandHandler<TDefinition, TContext>,
   ): this {
+    if (this.#handlers.has(definition.type)) {
+      throw new Error(`Command handler already registered for ${definition.type}`);
+    }
+
     this.#handlers.set(definition.type, async (command, ctx) =>
       handler(command as CommandOf<TDefinition>, ctx),
     );
     return this;
   }
 
-  use<TDefinition extends CommandDefinition<string, unknown, unknown, CqrsError>>(
-    middleware: CommandMiddleware<TDefinition, TContext>,
-  ): this {
-    this.#middleware.push(async (command, ctx, next) => {
-      const typedNext = next as () => Promise<
-        Result<ResultOf<TDefinition>, ErrorOf<TDefinition> | CqrsError>
-      >;
-
-      return middleware(command as CommandOf<TDefinition>, ctx, typedNext);
-    });
+  use(middleware: CommandMiddleware<TContext>): this {
+    this.#middleware.push(middleware);
     return this;
   }
 
   async execute<TDefinition extends CommandDefinition<string, unknown, unknown, CqrsError>>(
     definition: TDefinition,
     input: unknown,
-    ctx = {} as TContext,
+    ...args: ExecuteContextArgs<TContext>
   ): Promise<Result<ResultOf<TDefinition>, BusError<TDefinition>>> {
+    const ctx = (args[0] ?? {}) as TContext;
     const parsed = await parseCommand(definition, input);
 
     if (!parsed.ok) {
@@ -133,7 +120,7 @@ export class CommandBus<TContext extends BusContext = BusContext> {
 
     const invokeHandler: AnyNext = () => handler(parsed.value, ctx);
     const pipeline = this.#middleware.reduceRight<AnyNext>(
-      (next, middleware) => () => middleware(parsed.value, ctx, next),
+      (next, middleware) => async () => middleware(parsed.value, ctx, next),
       invokeHandler,
     );
 
@@ -144,36 +131,33 @@ export class CommandBus<TContext extends BusContext = BusContext> {
 
 export class QueryBus<TContext extends BusContext = BusContext> {
   readonly #handlers = new Map<string, AnyQueryHandler<TContext>>();
-  readonly #middleware: AnyQueryMiddleware<TContext>[] = [];
+  readonly #middleware: QueryMiddleware<TContext>[] = [];
 
   register<TDefinition extends QueryDefinition<string, unknown, unknown, CqrsError>>(
     definition: TDefinition,
     handler: QueryHandler<TDefinition, TContext>,
   ): this {
+    if (this.#handlers.has(definition.type)) {
+      throw new Error(`Query handler already registered for ${definition.type}`);
+    }
+
     this.#handlers.set(definition.type, async (query, ctx) =>
       handler(query as QueryOf<TDefinition>, ctx),
     );
     return this;
   }
 
-  use<TDefinition extends QueryDefinition<string, unknown, unknown, CqrsError>>(
-    middleware: QueryMiddleware<TDefinition, TContext>,
-  ): this {
-    this.#middleware.push(async (query, ctx, next) => {
-      const typedNext = next as () => Promise<
-        Result<ResultOf<TDefinition>, ErrorOf<TDefinition> | CqrsError>
-      >;
-
-      return middleware(query as QueryOf<TDefinition>, ctx, typedNext);
-    });
+  use(middleware: QueryMiddleware<TContext>): this {
+    this.#middleware.push(middleware);
     return this;
   }
 
   async execute<TDefinition extends QueryDefinition<string, unknown, unknown, CqrsError>>(
     definition: TDefinition,
     input: unknown,
-    ctx = {} as TContext,
+    ...args: ExecuteContextArgs<TContext>
   ): Promise<Result<ResultOf<TDefinition>, BusError<TDefinition>>> {
+    const ctx = (args[0] ?? {}) as TContext;
     const parsed = await parseQuery(definition, input);
 
     if (!parsed.ok) {
@@ -188,7 +172,7 @@ export class QueryBus<TContext extends BusContext = BusContext> {
 
     const invokeHandler: AnyNext = () => handler(parsed.value, ctx);
     const pipeline = this.#middleware.reduceRight<AnyNext>(
-      (next, middleware) => () => middleware(parsed.value, ctx, next),
+      (next, middleware) => async () => middleware(parsed.value, ctx, next),
       invokeHandler,
     );
 
