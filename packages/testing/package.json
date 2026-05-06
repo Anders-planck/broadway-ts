@@ -1,0 +1,27 @@
+{
+  "name": "@broadway-ts/testing",
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Testing helpers for Broadway TS.",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts --clean",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "peerDependencies": {
+    "@broadway-ts/core": ">=0.0.0 <1.0.0",
+    "@broadway-ts/event-sourcing": ">=0.0.0 <1.0.0"
+  },
+  "devDependencies": {
+    "@broadway-ts/core": "workspace:*",
+    "@broadway-ts/event-sourcing": "workspace:*"
+  }
+}

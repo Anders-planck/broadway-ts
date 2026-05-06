@@ -29,6 +29,15 @@ importers:
         specifier: workspace:*
         version: link:../core
 
+  packages/testing:
+    devDependencies:
+      '@broadway-ts/core':
+        specifier: workspace:*
+        version: link:../core
+      '@broadway-ts/event-sourcing':
+        specifier: workspace:*
+        version: link:../event-sourcing
+
   packages/zod:
     devDependencies:
       '@broadway-ts/core':
