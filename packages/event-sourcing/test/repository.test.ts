@@ -79,11 +79,13 @@ class FakeEventStore implements EventStore {
       return this.appendResult;
     }
 
+    const currentVersion = this.currentVersion(expectedVersion);
+
     return ok(
       events.map((event, index) => ({
         ...event,
         streamId,
-        streamVersion: index + 1,
+        streamVersion: currentVersion + index + 1,
       })),
     );
   }
@@ -93,6 +95,18 @@ class FakeEventStore implements EventStore {
   ): Promise<Result<readonly EventEnvelope[], PersistenceError>> {
     this.readStreamCalls.push(streamId);
     return this.readStreamResult;
+  }
+
+  private currentVersion(expectedVersion: ExpectedVersion): number {
+    if (typeof expectedVersion === "number") {
+      return expectedVersion;
+    }
+
+    if (!this.readStreamResult.ok) {
+      return 0;
+    }
+
+    return this.readStreamResult.value.at(-1)?.streamVersion ?? 0;
   }
 }
 
@@ -172,6 +186,7 @@ describe("AggregateRepository", () => {
         ],
       },
     ]);
+    expect(item.version).toBe(8);
   });
 
   it("includes causation and correlation ids when provided", async () => {
