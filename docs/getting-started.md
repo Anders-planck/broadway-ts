@@ -5,8 +5,6 @@ handler, execute it through a bus, and handle a typed `Result`.
 
 ## Install
 
-Packages are not published yet. After the first npm release:
-
 ```bash
 pnpm add @broadway-ts/core @broadway-ts/zod zod
 ```

@@ -17,11 +17,10 @@ web frameworks, databases, or dependency injection containers.
 
 ## Status
 
-Prototype. Public APIs are being validated before the first npm release.
+Prototype. The first npm release is published as `0.0.1`; public APIs are still
+being validated before a stable `1.0.0`.
 
 ## Install
-
-Packages are not published yet. After the first release:
 
 ```bash
 pnpm add @broadway-ts/core @broadway-ts/event-sourcing
@@ -145,8 +144,9 @@ run through `pnpm typecheck` and `pnpm run ci`.
 
 ## Release
 
-Changesets is configured, but npm publishing is not enabled until `NPM_TOKEN`
-is added to repository secrets and the package scope is confirmed.
+Changesets publishes packages through the manual GitHub Actions `Release`
+workflow. The repository has `NPM_TOKEN` configured and the `@broadway-ts`
+npm scope is active.
 
 ```bash
 pnpm changeset

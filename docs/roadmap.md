@@ -1,11 +1,5 @@
 # Roadmap
 
-## Before First npm Release
-
-- Run the manual Release workflow
-- Review and merge the Changesets release PR
-- Confirm npm packages are published
-
 ## Package Work
 
 - Implement Postgres event store
@@ -40,3 +34,6 @@
 - `NPM_TOKEN` added to GitHub repository secrets
 - GitHub Actions workflow permissions set to `write`
 - `@broadway-ts/postgres` selected for first release as a documented placeholder
+- Manual Release workflow run for first package versioning
+- Changesets release PR reviewed and merged
+- npm packages published as `0.0.1`

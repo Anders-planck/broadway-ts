@@ -26,5 +26,5 @@ Package boundaries:
 - @broadway-ts/testing: in-memory event store, fixed clock, deterministic IDs, aggregate scenarios.
 - @broadway-ts/postgres: placeholder for future Postgres EventStore adapter.
 
-Current status: prototype, not published to npm yet.
+Current status: prototype, published to npm as 0.0.1.
 Type-level tests use Vitest expectTypeOf assertions and run through pnpm typecheck.

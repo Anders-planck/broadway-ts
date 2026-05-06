@@ -24,8 +24,8 @@ features:
 
 ## Status
 
-Broadway TS is a prototype. The package shape is ready for review, but the first
-npm release is not published yet.
+Broadway TS is a prototype. The first npm release is published as `0.0.1`, and
+the package shape is ready for API review before a stable `1.0.0`.
 
 ## Packages
 
