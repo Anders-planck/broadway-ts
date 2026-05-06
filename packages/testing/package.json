@@ -1,6 +1,6 @@
 {
   "name": "@broadway-ts/testing",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "description": "Testing helpers for Broadway TS.",
   "license": "MIT",
@@ -27,7 +27,9 @@
       "import": "./dist/index.js"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "publishConfig": {
     "access": "public"
   },
@@ -37,8 +39,8 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "peerDependencies": {
-    "@broadway-ts/core": ">=0.0.0 <1.0.0",
-    "@broadway-ts/event-sourcing": ">=0.0.0 <1.0.0"
+    "@broadway-ts/core": ">=0.0.1 <1.0.0",
+    "@broadway-ts/event-sourcing": ">=0.0.1 <1.0.0"
   },
   "devDependencies": {
     "@broadway-ts/core": "workspace:*",
