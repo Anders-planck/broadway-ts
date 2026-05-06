@@ -16,9 +16,9 @@
   "scripts": {
     "build": "pnpm -r build",
     "changeset": "changeset",
-    "ci": "pnpm test && pnpm typecheck && pnpm build",
+    "ci": "pnpm test && pnpm typecheck",
     "release": "changeset publish",
-    "test": "pnpm -r test",
+    "test": "pnpm build && pnpm -r test",
     "typecheck": "pnpm -r typecheck",
     "version-packages": "changeset version"
   },
